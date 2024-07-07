@@ -6,53 +6,54 @@ import com.employee.demo.exception.EmployeeNotFoundException;
 import com.employee.demo.exception.EmployeeStorageIsFullException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
     private final int maxEmployee = 7;
     private int count = 0;
-    List <Employee> employees;
+    Map<String, Employee> employees;
 
-    public EmployeeServiceImpl(List<Employee> employees) {
-        this.employees = employees;
+    public EmployeeServiceImpl() {
+        this.employees = new HashMap<>();
     }
 
+    @Override
     public Employee addEmloyee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        if (employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
         }
         if (count >= maxEmployee) {
             throw new EmployeeStorageIsFullException();
         }
-        employees.add(employee);
+        employees.put(employee.getFullName(), employee);
         count++;
         return employee;
     }
 
+    @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+        if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
         }
-        employees.remove((Employee) employee);
+        employees.remove(employee.getFullName());
         count--;
         return employee;
     }
 
+    @Override
     public Employee findEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+        if (!employees.containsKey(employee.getFullName())) {
             throw new EmployeeNotFoundException();
         }
-        return employee;
+        return employees.get(employee.getFullName());
     }
 
-    public List<Employee> printALlEmployee() {
-        return Collections.unmodifiableList(employees);
+    @Override
+    public Collection<Employee> printALlEmployee() {
+        return Collections.unmodifiableCollection(employees.values());
     }
 }
