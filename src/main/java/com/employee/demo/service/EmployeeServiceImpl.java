@@ -4,6 +4,8 @@ import com.employee.demo.Employee;
 import com.employee.demo.exception.EmployeeAlreadyAddedException;
 import com.employee.demo.exception.EmployeeNotFoundException;
 import com.employee.demo.exception.EmployeeStorageIsFullException;
+import com.employee.demo.exception.ParamValidationExeption;
+import com.employee.demo.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,14 +14,23 @@ import java.util.*;
 public class EmployeeServiceImpl implements EmployeeService {
     private final int maxEmployee = 7;
     private int count = 0;
-    Map<String, Employee> employees;
+    private final Validator validator;
 
-    public EmployeeServiceImpl() {
+    Map<String, Employee> employees;
+   /* public EmployeeServiceImpl(Validator validator) {
+        this.validator = validator;
+    }*/
+
+
+    public EmployeeServiceImpl(Validator validator) {
+        this.validator = validator;
         this.employees = new HashMap<>();
     }
 
     @Override
     public Employee addEmloyee(String firstName, String lastName, int department, double salary) {
+        firstName = validator.checkAndCapitalize(firstName);
+        lastName = validator.checkAndCapitalize(lastName);
         Employee employee = new Employee(firstName, lastName, department, salary);
         if (employees.containsKey(employee.getFullName())) {
             throw new EmployeeAlreadyAddedException();
