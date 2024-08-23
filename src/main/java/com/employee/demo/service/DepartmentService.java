@@ -10,6 +10,7 @@ import java.util.Map;
 public interface DepartmentService {
     public Employee getMaxSalary(int department);
     public Employee getMinSalary(int department);
+    public double getSumSalary(int department);
 
     public List<Employee> getAllEmployeesByDepartment(int department);
 

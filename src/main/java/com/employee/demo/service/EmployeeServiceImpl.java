@@ -21,7 +21,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.validator = validator;
     }*/
 
-
+    public int getMaxEmployee() {
+        return maxEmployee;
+    }
     public EmployeeServiceImpl(Validator validator) {
         this.validator = validator;
         this.employees = new HashMap<>();
